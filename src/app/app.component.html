@@ -1,0 +1,211 @@
+<!-- NAV -->
+<nav class="nav" [class.scrolled]="isScrolled">
+  <div class="nav-inner">
+    <div class="nav-brand" (click)="scrollTo('hero')">
+      <span class="brand-icon">🍝</span>
+      <div class="brand-text">
+        <span class="brand-name">{{ config.business.name }}</span>
+        <span class="brand-tagline">Cucina Italiana</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a (click)="scrollTo('hero')">{{ t.nav.home }}</a></li>
+      <li><a (click)="scrollTo('menu')">{{ t.nav.menu }}</a></li>
+      <li><a (click)="scrollTo('about')">{{ t.nav.about }}</a></li>
+      <li><a (click)="scrollTo('reviews')">{{ t.nav.reviews }}</a></li>
+      <li><a (click)="scrollTo('contact')" class="nav-reserve">{{ t.nav.contact }}</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="ctrl-btn" (click)="toggleTheme()">{{ themeIcon }}</button>
+      <button class="ctrl-btn" (click)="toggleCulture()">{{ cultureLabel }}</button>
+      <button class="hamburger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  @if (menuOpen) {
+    <div class="mobile-menu">
+      <a (click)="scrollTo('hero')">{{ t.nav.home }}</a>
+      <a (click)="scrollTo('menu')">{{ t.nav.menu }}</a>
+      <a (click)="scrollTo('about')">{{ t.nav.about }}</a>
+      <a (click)="scrollTo('reviews')">{{ t.nav.reviews }}</a>
+      <a (click)="scrollTo('contact')">{{ t.nav.contact }}</a>
+    </div>
+  }
+</nav>
+
+<!-- HERO: full-width warm with text overlay -->
+<section id="hero" class="hero">
+  <div class="hero-media">
+    <img [src]="config.images.hero" alt="Trattoria Vico" class="hero-img" />
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-label">{{ t.hero.label }}</p>
+    <h1 class="hero-title">{{ t.hero.title }}<br><em>{{ t.hero.titleEm }}</em></h1>
+    <p class="hero-sub">{{ t.hero.subtitle }}</p>
+    <div class="hero-btns">
+      <button class="btn-red" (click)="scrollTo('contact')">{{ t.hero.cta }}</button>
+      <button class="btn-outline" (click)="scrollTo('menu')">{{ t.hero.ctaSecondary }}</button>
+    </div>
+  </div>
+  <div class="hero-stripe">
+    <span>La Vera Italia</span>
+    <span class="dot">·</span>
+    <span>{{ config.business.phone }}</span>
+    <span class="dot">·</span>
+    <span>Dal 1987</span>
+  </div>
+</section>
+
+<!-- MENU: card grid with badges -->
+<section id="menu" class="section menu-section">
+  <div class="section-head">
+    <p class="eyebrow">{{ t.menu.label }}</p>
+    <h2 class="section-title">{{ t.menu.title }} <em>{{ t.menu.titleEm }}</em></h2>
+    <div class="divider-leaf">🌿</div>
+  </div>
+  <div class="menu-grid">
+    @for (item of t.menu.items; track item.name) {
+      <div class="menu-card">
+        <span class="menu-badge">{{ item.badge }}</span>
+        <h3 class="menu-name">{{ item.name }}</h3>
+        <p class="menu-desc">{{ item.desc }}</p>
+        <span class="menu-price">€{{ item.price }}</span>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ABOUT: timeline story -->
+<section id="about" class="section about-section">
+  <div class="about-layout">
+    <div class="about-image-col">
+      <img [src]="config.images.about" alt="La Storia" class="about-img" />
+      <div class="gallery-strip">
+        @for (img of config.images.gallery.slice(0,3); track img) {
+          <img [src]="img" alt="" class="strip-img" />
+        }
+      </div>
+    </div>
+    <div class="about-story-col">
+      <p class="eyebrow">{{ t.about.label }}</p>
+      <h2 class="section-title">{{ t.about.title }} <em>{{ t.about.titleEm }}</em></h2>
+      <p class="about-p">{{ t.about.p1 }}</p>
+      <div class="timeline">
+        @for (item of t.about.timeline; track item.year) {
+          <div class="timeline-item">
+            <div class="tl-year">{{ item.year }}</div>
+            <div class="tl-dot"></div>
+            <div class="tl-text">{{ item.text }}</div>
+          </div>
+        }
+      </div>
+      <blockquote class="about-quote">{{ t.about.quote }}</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" class="section reviews-section">
+  <div class="section-head">
+    <p class="eyebrow">{{ t.reviews.label }}</p>
+    <h2 class="section-title">{{ t.reviews.title }} <em>{{ t.reviews.titleEm }}</em></h2>
+    <div class="divider-leaf">🌿</div>
+  </div>
+  @if (reviewsLoading) { <p class="state-text">{{ t.reviews.loading }}</p> }
+  @if (reviewsError) { <p class="state-text err">{{ t.reviews.error }}</p> }
+  @if (!reviewsLoading && !reviewsError && reviews.length > 0) {
+    <div class="reviews-grid">
+      @for (r of reviews; track r.author_name) {
+        <div class="review-card">
+          <div class="review-stars">
+            @for (s of getStars(r.rating); track s) {
+              <span [class.lit]="s <= r.rating">★</span>
+            }
+          </div>
+          <p class="review-body">"{{ r.text }}"</p>
+          <div class="review-meta">
+            <strong>{{ r.author_name }}</strong>
+            @if (r.is_local_guide) { <span class="guide-badge">{{ t.reviews.localGuide }}</span> }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section contact-section">
+  <div class="section-head">
+    <p class="eyebrow">{{ t.contact.label }}</p>
+    <h2 class="section-title">{{ t.contact.title }} <em>{{ t.contact.titleEm }}</em></h2>
+    <div class="divider-leaf">🌿</div>
+  </div>
+  <div class="contact-layout">
+    <div class="contact-left">
+      <div class="info-item"><span class="info-label">{{ t.contact.address }}</span><span>{{ culture === 'el' ? config.business.address : config.business.addressEn }}</span></div>
+      <div class="info-item"><span class="info-label">{{ t.contact.phone }}</span><a [href]="'tel:' + config.business.phone">{{ config.business.phone }}</a></div>
+      <div class="info-item"><span class="info-label">{{ t.contact.hours }}</span><span>{{ culture === 'el' ? config.business.hours : config.business.hoursEn }}</span></div>
+      <div class="social-row">
+        <a [href]="config.business.social.instagram" target="_blank" rel="noopener">Instagram</a>
+        <a [href]="config.business.social.facebook" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div class="map-wrap" (click)="openMap()">
+        <iframe [src]="mapEmbedUrl" width="100%" height="200" frameborder="0" style="border:0;pointer-events:none;" loading="lazy"></iframe>
+        <div class="map-tip"><span>🗺 {{ t.contact.openMap }}</span></div>
+      </div>
+    </div>
+    <div class="contact-right">
+      <form (ngSubmit)="submitReservation()" #f="ngForm" novalidate class="res-form">
+        <div class="field-row">
+          <div class="field">
+            <input type="text" [placeholder]="t.contact.namePlaceholder" [(ngModel)]="reservation.name" name="name" required #nameF="ngModel" [class.err]="nameF.invalid && nameF.touched" />
+            @if (nameF.invalid && nameF.touched) { <small>{{ t.validation.required }}</small> }
+          </div>
+          <div class="field">
+            <input type="email" [placeholder]="t.contact.emailPlaceholder" [(ngModel)]="reservation.email" name="email" required email #emailF="ngModel" [class.err]="emailF.invalid && emailF.touched" />
+            @if (emailF.invalid && emailF.touched) { <small>{{ emailF.errors?.['email'] ? t.validation.emailInvalid : t.validation.required }}</small> }
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <input type="tel" [placeholder]="t.contact.phonePlaceholder" [(ngModel)]="reservation.phone" name="phone" required #phoneF="ngModel" [class.err]="phoneF.invalid && phoneF.touched" />
+            @if (phoneF.invalid && phoneF.touched) { <small>{{ t.validation.required }}</small> }
+          </div>
+          <div class="field">
+            <input type="number" [placeholder]="t.contact.partySizePlaceholder" [(ngModel)]="reservation.partySize" name="partySize" required min="1" #psF="ngModel" [class.err]="psF.invalid && psF.touched" />
+            @if (psF.invalid && psF.touched) { <small>{{ t.validation.required }}</small> }
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <input type="date" [(ngModel)]="reservation.date" name="date" required #dateF="ngModel" [class.err]="dateF.invalid && dateF.touched" />
+            @if (dateF.invalid && dateF.touched) { <small>{{ t.validation.required }}</small> }
+          </div>
+          <div class="field">
+            <input type="time" [(ngModel)]="reservation.time" name="time" required #timeF="ngModel" [class.err]="timeF.invalid && timeF.touched" />
+            @if (timeF.invalid && timeF.touched) { <small>{{ t.validation.required }}</small> }
+          </div>
+        </div>
+        <div class="field">
+          <textarea [placeholder]="t.contact.notesPlaceholder" [(ngModel)]="reservation.notes" name="notes" rows="3"></textarea>
+        </div>
+        @if (submitSuccess) { <div class="msg-ok">{{ t.contact.success }}</div> }
+        @if (submitError) { <div class="msg-err">{{ t.contact.error }}</div> }
+        <button type="submit" class="btn-red btn-block" [disabled]="isSubmitting || f.invalid">
+          @if (isSubmitting) { <span class="btn-spinner"></span> }
+          {{ isSubmitting ? t.contact.submitting : t.contact.submit }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-brand">{{ config.business.name }} <span>· {{ t.footer.tagline }}</span></p>
+    <p class="footer-copy">{{ t.footer.copy }}</p>
+  </div>
+</footer>
