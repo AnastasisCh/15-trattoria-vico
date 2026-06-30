@@ -189,6 +189,25 @@
   .hero-stripe { flex-wrap: wrap; gap: 0.75rem; }
 }
 
+@media (max-width: 480px) {
+  .nav-inner { padding: 0.75rem 1rem; }
+  .nav-controls { gap: 0.3rem; }
+  .ctrl-btn { padding: 0.25rem 0.45rem; font-size: 0.7rem; }
+  .section { padding: 3rem 1rem; }
+  .hero { min-height: 500px; }
+  .hero-content { padding: 0 1rem 4rem; margin-left: 0; }
+  .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
+  .hero-btns { flex-direction: column; align-items: stretch; }
+  .btn-red, .btn-outline { width: 100%; text-align: center; }
+  .about-layout { grid-template-columns: 1fr; }
+  .about-img { height: 260px; }
+  .contact-layout { grid-template-columns: 1fr; }
+  .enroll-form, .res-form { padding: 1.5rem; }
+  .field-row { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .section-title { font-size: clamp(1.6rem, 6vw, 2rem); }
+}
+
 .btn-spinner {
   display: inline-block;
   width: 0.9em;
